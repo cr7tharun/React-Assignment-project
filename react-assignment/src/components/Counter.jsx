@@ -5,18 +5,16 @@ import { useSpring, animated } from 'react-spring';
 const Counter = () => {
   const [count, setCount] = useState(0);
 
-  // Define the animated background color based on the count
-  const { backgroundColor } = useSpring({
-    backgroundColor: `rgba(25, 118, 210, ${Math.min(0.1 + count * 0.05, 1)})`, // Material-UI's primary color with varying opacity
-    config: { tension: 200, friction: 15 },
+  const animatedStyles = useSpring({
+    backgroundColor: `rgba(25, 118, 210, ${Math.min(0.1 + count * 0.05, 1)})`,
+    config: { tension: 250, friction: 20 },
   });
 
-  // Define the animated div with the dynamic background color
   const AnimatedBox = animated(Box);
 
   return (
     <AnimatedBox
-      style={{ backgroundColor }}
+      style={animatedStyles}
       sx={{
         p: 4,
         textAlign: 'center',

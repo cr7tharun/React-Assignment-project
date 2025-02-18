@@ -1,10 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
 
 const RichTextEditor = () => {
-  const [content, setContent] = useState(localStorage.getItem('editorContent') || '');
+  const [content, setContent] = useState('');
   const editorRef = useRef(null);
+
+  // Load content from localStorage on component mount
+  useEffect(() => {
+    const savedContent = localStorage.getItem('editorContent');
+    if (savedContent) {
+      setContent(savedContent);
+    }
+  }, []);
 
   const handleEditorChange = (newValue) => {
     setContent(newValue);
@@ -22,23 +30,30 @@ const RichTextEditor = () => {
         initialValue={content}
         init={{
           height: 500,
-          menubar: false,
+          menubar: true,
           plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen',
             'insertdatetime media table paste code help wordcount',
+            'emoticons',
+            'textcolor',
+            'directionality',
+            'fullscreen',
+            'code',
           ],
           toolbar:
-            'undo redo | formatselect | bold italic backcolor | ' +
+            'undo redo | formatselect | bold italic underline strikethrough | ' +
             'alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent | removeformat | customInsertButton | help',
-          content_style: 'body { font-family:Arial,Helvetica,sans-serif; font-size:14px; padding: 10px; }',
+            'bullist numlist outdent indent | removeformat | emoticons | ' +
+            'forecolor backcolor | ltr rtl | fullscreen | code | help',
+          content_style:
+            'body { font-family:Arial,Helvetica,sans-serif; font-size:14px; padding: 10px; }',
           setup: (editor) => {
-            editor.ui.registry.addButton('customInsertButton', {
-              text: 'Insert Template',
-              tooltip: 'Insert predefined template',
+            editor.ui.registry.addButton('emoticons', {
+              text: '😊',
+              tooltip: 'Insert emoticon',
               onAction: () => {
-                editor.insertContent('<p><strong>Template Content:</strong> Replace this with your text.</p>');
+                editor.insertContent('😊');
               },
             });
           },

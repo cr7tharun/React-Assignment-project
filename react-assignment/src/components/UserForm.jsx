@@ -9,15 +9,20 @@ import {
   Alert,
 } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveUserData } from '../redux/userSlice';
 
 const UserForm = () => {
-  const [userData, setUserData] = useState({
-    id: uuidv4(),
-    name: '',
-    address: '',
-    email: '',
-    phone: '',
-  });
+  const dispatch = useDispatch();
+  const storedUserData = useSelector((state) => state.user.user);
+
+  // Initialize state with Redux user data or a new user
+  const [userData, setUserData] = useState(
+    storedUserData.id
+      ? storedUserData
+      : { id: uuidv4(), name: '', address: '', email: '', phone: '' }
+  );
+
   const [isDirty, setIsDirty] = useState(false);
   const [errors, setErrors] = useState({});
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -59,7 +64,7 @@ const UserForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      localStorage.setItem('userData', JSON.stringify(userData));
+      dispatch(saveUserData(userData));
       setIsDirty(false);
       setOpenSnackbar(true);
     }
