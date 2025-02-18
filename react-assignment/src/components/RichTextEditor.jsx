@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Typography } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
 
 const RichTextEditor = () => {
-  const [content, setContent] = useState('');
   const editorRef = useRef(null);
+  const [content, setContent] = useState('');
 
-  // Load content from localStorage on component mount
   useEffect(() => {
     const savedContent = localStorage.getItem('editorContent');
     if (savedContent) {
@@ -14,9 +13,18 @@ const RichTextEditor = () => {
     }
   }, []);
 
-  const handleEditorChange = (newValue) => {
-    setContent(newValue);
-    localStorage.setItem('editorContent', newValue);
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.setContent(content);
+    }
+  }, [content]);
+
+  const handleEditorChange = () => {
+    if (editorRef.current) {
+      const newContent = editorRef.current.getContent();
+      setContent(newContent);
+      localStorage.setItem('editorContent', newContent);
+    }
   };
 
   return (
@@ -25,9 +33,9 @@ const RichTextEditor = () => {
         Rich Text Editor
       </Typography>
       <Editor
-        apiKey="your-api-key" // Replace with your TinyMCE API key
+        apiKey="vp9p6fvy3on1ukw2zrjclvn918z0mgnzrwj3aucrem9et1dy" 
         onInit={(evt, editor) => (editorRef.current = editor)}
-        initialValue={content}
+        initialValue={content} 
         init={{
           height: 500,
           menubar: true,
@@ -48,17 +56,8 @@ const RichTextEditor = () => {
             'forecolor backcolor | ltr rtl | fullscreen | code | help',
           content_style:
             'body { font-family:Arial,Helvetica,sans-serif; font-size:14px; padding: 10px; }',
-          setup: (editor) => {
-            editor.ui.registry.addButton('emoticons', {
-              text: '😊',
-              tooltip: 'Insert emoticon',
-              onAction: () => {
-                editor.insertContent('😊');
-              },
-            });
-          },
         }}
-        onEditorChange={handleEditorChange}
+        onEditorChange={handleEditorChange} 
       />
     </Container>
   );

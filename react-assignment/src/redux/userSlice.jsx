@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Get stored data safely from localStorage
 const getStoredUserData = () => {
   try {
     const storedUser = localStorage.getItem('userData');
@@ -28,7 +27,7 @@ const userSlice = createSlice({
   reducers: {
     saveUserData: (state, action) => {
       state.user = action.payload;
-      localStorage.setItem('userData', JSON.stringify(action.payload)); // Sync with localStorage
+      localStorage.setItem('userData', JSON.stringify(action.payload)); 
     },
   },
 });
